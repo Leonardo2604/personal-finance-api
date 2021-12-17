@@ -1,5 +1,5 @@
 import { injectable } from 'tsyringe';
-import { getRepository, IsNull, Repository } from 'typeorm';
+import { getRepository, Repository } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 import IncomeType from '../../../../database/entities/incomeType';
 import CreateIncomeTypeData from '../../interfaces/incomeTypeService/createIncomeTypeData';
