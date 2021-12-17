@@ -10,6 +10,7 @@ interface IncomeTypeService {
     incomeTypeId: number,
     data: UpdateIncomeTypeData,
   ): Promise<void>;
+  deleteFor(userId: number, incomeTypeId: number): Promise<void>;
 }
 
 export default IncomeTypeService;

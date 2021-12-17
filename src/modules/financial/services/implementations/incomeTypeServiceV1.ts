@@ -49,7 +49,19 @@ class IncomeTypeServiceV1 implements IncomeTypeService {
         id: userId,
       },
     };
+
     await this.incomeTypeRepository.update(where, data);
+  }
+
+  async deleteFor(userId: number, id: number): Promise<void> {
+    const where = {
+      id,
+      user: {
+        id: userId,
+      },
+    };
+
+    await this.incomeTypeRepository.softDelete(where);
   }
 }
 
