@@ -1,6 +1,7 @@
 import {
   Column,
   CreateDateColumn,
+  DeleteDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
@@ -33,6 +34,12 @@ class IncomeType {
     type: 'timestamp',
   })
   updatedAt: Date;
+
+  @DeleteDateColumn({
+    name: 'deleted_at',
+    type: 'timestamp',
+  })
+  deletedAt: Date;
 
   @ManyToOne(() => IncomeType, incomeType => incomeType.children)
   @JoinColumn({ name: 'parent_id' })
