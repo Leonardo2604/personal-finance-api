@@ -26,25 +26,25 @@ class IncomeTypeRouteRegister implements RouteRegister {
 
   register(router: Router): void {
     router.get(
-      '/users/:userId/income-types',
+      '/users/:userId(\\d+)/income-types',
       this.ensureAuthenticatedMiddleware.handle,
       this.ensureResourceBelongsToUserMiddleware.handle,
       this.incomeTypeController.index,
     );
     router.post(
-      '/users/:userId/income-types',
+      '/users/:userId(\\d+)/income-types',
       this.ensureAuthenticatedMiddleware.handle,
       this.ensureResourceBelongsToUserMiddleware.handle,
       this.incomeTypeController.create,
     );
     router.put(
-      '/users/:userId/income-types/:incomeTypeId',
+      '/users/:userId(\\d+)/income-types/:incomeTypeId(\\d+)',
       this.ensureAuthenticatedMiddleware.handle,
       this.ensureResourceBelongsToUserMiddleware.handle,
       this.incomeTypeController.update,
     );
     router.delete(
-      '/users/:userId/income-types/:incomeTypeId',
+      '/users/:userId(\\d+)/income-types/:incomeTypeId(\\d+)',
       this.ensureAuthenticatedMiddleware.handle,
       this.ensureResourceBelongsToUserMiddleware.handle,
       this.incomeTypeController.delete,
