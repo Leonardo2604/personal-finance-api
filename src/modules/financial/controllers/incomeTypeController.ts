@@ -1,6 +1,5 @@
 import { Request, Response } from 'express';
 import { inject, injectable } from 'tsyringe';
-import User from '../../../database/entities/user';
 import IncomeTypeService from '../services/incomeTypeService';
 
 @injectable()
@@ -12,6 +11,7 @@ class IncomeTypeController {
     this.index = this.index.bind(this);
     this.create = this.create.bind(this);
     this.update = this.update.bind(this);
+    this.delete = this.delete.bind(this);
   }
 
   async index(request: Request, response: Response): Promise<Response> {
@@ -42,6 +42,17 @@ class IncomeTypeController {
       {
         name,
       },
+    );
+
+    return response.status(204).json();
+  }
+
+  async delete(request: Request, response: Response): Promise<Response> {
+    const { userId, incomeTypeId } = request.params;
+
+    await this.incomeTypeService.deleteFor(
+      Number(userId),
+      Number(incomeTypeId),
     );
 
     return response.status(204).json();
