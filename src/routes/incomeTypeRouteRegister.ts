@@ -47,7 +47,7 @@ class IncomeTypeRouteRegister implements RouteRegister {
       '/users/:userId/income-types/:incomeTypeId',
       this.ensureAuthenticatedMiddleware.handle,
       this.ensureResourceBelongsToUserMiddleware.handle,
-      this.incomeTypeController.update,
+      this.incomeTypeController.delete,
     );
   }
 }
