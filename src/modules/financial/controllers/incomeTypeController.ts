@@ -23,24 +23,26 @@ class IncomeTypeController {
 
   async create(request: Request, response: Response): Promise<Response> {
     const { userId } = request.params;
-    const { name } = request.body;
+    const { name, parentId } = request.body;
 
     const incomeType = await this.incomeTypeService.createFor(Number(userId), {
       name,
+      parentId,
     });
 
     return response.status(201).json(incomeType);
   }
 
   async update(request: Request, response: Response): Promise<Response> {
-    const { name } = request.body;
     const { userId, incomeTypeId } = request.params;
+    const { name, parentId } = request.body;
 
     await this.incomeTypeService.updateFor(
       Number(userId),
       Number(incomeTypeId),
       {
         name,
+        parentId,
       },
     );
 

@@ -19,8 +19,8 @@ class UserServiceV1 implements UserService {
     return users;
   }
 
-  async findById(userId: number): Promise<User> {
-    const user = await this.userRepository.findOne(userId);
+  async findById(id: number): Promise<User> {
+    const user = await this.userRepository.findOne(id);
 
     if (!user) {
       throw new NotFoundException('User not found.');
@@ -47,9 +47,9 @@ class UserServiceV1 implements UserService {
     return this.userRepository.save(user);
   }
 
-  async delete(userId: number): Promise<void> {
+  async delete(id: number): Promise<void> {
     await this.userRepository.softDelete({
-      id: userId,
+      id,
     });
   }
 }

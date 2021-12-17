@@ -1,7 +1,7 @@
-import { inject, injectable } from 'tsyringe';
-import { getRepository, Repository } from 'typeorm';
+import { injectable } from 'tsyringe';
+import { getRepository, IsNull, Repository } from 'typeorm';
+import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 import IncomeType from '../../../../database/entities/incomeType';
-import UserService from '../../../auth/services/userService';
 import CreateIncomeTypeData from '../../interfaces/incomeTypeService/createIncomeTypeData';
 import UpdateIncomeTypeData from '../../interfaces/incomeTypeService/updateIncomeTypeData';
 import IncomeTypeService from '../incomeTypeService';
@@ -10,10 +10,7 @@ import IncomeTypeService from '../incomeTypeService';
 class IncomeTypeServiceV1 implements IncomeTypeService {
   private incomeTypeRepository: Repository<IncomeType>;
 
-  constructor(
-    @inject('UserService')
-    private userService: UserService,
-  ) {
+  constructor() {
     this.incomeTypeRepository = getRepository(IncomeType);
   }
 
@@ -26,11 +23,14 @@ class IncomeTypeServiceV1 implements IncomeTypeService {
 
   async createFor(
     userId: number,
-    { name }: CreateIncomeTypeData,
+    { name, parentId }: CreateIncomeTypeData,
   ): Promise<IncomeType> {
     const incomeType = this.incomeTypeRepository.create({
       user: {
         id: userId,
+      },
+      parent: {
+        id: parentId,
       },
       name,
     });
@@ -41,7 +41,7 @@ class IncomeTypeServiceV1 implements IncomeTypeService {
   async updateFor(
     userId: number,
     id: number,
-    data: UpdateIncomeTypeData,
+    { name, parentId }: UpdateIncomeTypeData,
   ): Promise<void> {
     const where = {
       id,
@@ -49,6 +49,20 @@ class IncomeTypeServiceV1 implements IncomeTypeService {
         id: userId,
       },
     };
+
+    const data: QueryDeepPartialEntity<IncomeType> = {
+      name,
+    };
+
+    if (parentId && parentId !== -1) {
+      data.parent = {
+        id: parentId,
+      };
+    } else if (parentId === -1) {
+      data.parent = {
+        id: undefined,
+      };
+    }
 
     await this.incomeTypeRepository.update(where, data);
   }
