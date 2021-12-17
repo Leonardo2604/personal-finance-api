@@ -40,7 +40,7 @@ class IncomeTypeRouteRegister implements RouteRegister {
     router.put(
       '/users/:userId/income-types/:incomeTypeId',
       this.ensureAuthenticatedMiddleware.handle,
-      // this.ensureResourceBelongsToUserMiddleware.handle,
+      this.ensureResourceBelongsToUserMiddleware.handle,
       this.incomeTypeController.update,
     );
   }
