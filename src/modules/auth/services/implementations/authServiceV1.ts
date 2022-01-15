@@ -27,7 +27,7 @@ class AuthServiceV1 implements AuthService {
     try {
       const user = await this.userService.findByEmail(credentials.email);
 
-      const passwordIsCorrect = this.encrypterService.compare(
+      const passwordIsCorrect = await this.encrypterService.compare(
         credentials.password,
         user.password,
       );
