@@ -10,6 +10,7 @@ class AuthController {
   ) {
     this.authenticate = this.authenticate.bind(this);
     this.renewToken = this.renewToken.bind(this);
+    this.me = this.me.bind(this);
   }
 
   async authenticate(request: Request, response: Response): Promise<Response> {
@@ -26,6 +27,18 @@ class AuthController {
     const { refreshToken } = request.body;
     const authorization = await this.authService.renewToken(refreshToken);
     return response.json(authorization);
+  }
+
+  async me(request: Request, response: Response) {
+    const bearerToken = request.headers.authorization || '';
+    const [, token] = bearerToken.split(' ');
+    const user = await this.authService.getUserByToken(token);
+
+    return response.json({
+      id: user.id,
+      name: user.name,
+      email: user.email,
+    });
   }
 }
 
