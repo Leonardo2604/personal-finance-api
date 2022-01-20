@@ -78,7 +78,7 @@ class AuthService {
     };
 
     if (needRefreshToken) {
-      const refreshToken = await this.refreshTokenService.createFor(user);
+      const refreshToken = await this.refreshTokenService.createOrUpdate(user);
       authorization.refreshToken = refreshToken.token;
     }
 

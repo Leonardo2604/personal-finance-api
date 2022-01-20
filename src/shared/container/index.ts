@@ -12,6 +12,8 @@ import JwtService from '../services/jwtService';
 import UuidService from '../services/uuidService';
 import UserRepository from '../../modules/auth/repositories/userRepository';
 import UserRepositoryTypeOrm from '../../modules/auth/repositories/typeorm/userRepositoryTypeOrm';
+import RefreshTokenRepository from '../../modules/auth/repositories/refreshTokenRepository';
+import RefreshTokenRepositoryTypeOrm from '../../modules/auth/repositories/typeorm/refreshTokenRepositoryTypeOrm';
 
 class AppProvider {
   static register() {
@@ -36,6 +38,10 @@ class AppProvider {
     container.registerSingleton<RefreshTokenService>(
       'RefreshTokenService',
       RefreshTokenService,
+    );
+    container.registerSingleton<RefreshTokenRepository>(
+      'RefreshTokenRepository',
+      RefreshTokenRepositoryTypeOrm,
     );
     container.registerSingleton<IncomeTypeService>(
       'IncomeTypeService',
