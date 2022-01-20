@@ -6,11 +6,11 @@ import UserRepository from '../userRepository';
 class UserRepositoryInMenory implements UserRepository {
   private users: User[] = [];
 
-  async all(): Promise<User[]> {
+  async getAll(): Promise<User[]> {
     return this.users;
   }
 
-  async findOrFail(id: number): Promise<User> {
+  async findByIdOrFail(id: number): Promise<User> {
     const user = this.users.find(u => u.id === id);
 
     if (!user) {
@@ -34,7 +34,7 @@ class UserRepositoryInMenory implements UserRepository {
     const user = new User();
 
     Object.assign(user, {
-      id: this.users.length,
+      id: this.users.length + 1,
       name: data.name,
       email: data.email,
       password: data.password,
@@ -48,7 +48,7 @@ class UserRepositoryInMenory implements UserRepository {
   async delete(id: number): Promise<void> {
     const userIndex = this.users.findIndex(u => u.id === id);
 
-    if (userIndex) {
+    if (userIndex !== -1) {
       this.users.splice(userIndex, 1);
     }
   }

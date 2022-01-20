@@ -13,12 +13,12 @@ class UserRepositoryTypeOrm implements UserRepository {
     this.repository = getRepository(User);
   }
 
-  async all(): Promise<User[]> {
+  async getAll(): Promise<User[]> {
     const users = await this.repository.find();
     return users;
   }
 
-  async findOrFail(id: number): Promise<User> {
+  async findByIdOrFail(id: number): Promise<User> {
     const user = await this.repository.findOne(id);
 
     if (!user) {

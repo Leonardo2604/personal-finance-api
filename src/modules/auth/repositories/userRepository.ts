@@ -2,9 +2,9 @@ import User from '../../../database/entities/user';
 import CreateUserDto from '../dtos/createUserDto';
 
 interface UserRepository {
-  all(): Promise<User[]>;
+  getAll(): Promise<User[]>;
 
-  findOrFail(id: number): Promise<User>;
+  findByIdOrFail(id: number): Promise<User>;
 
   findByEmailOrFail(email: string): Promise<User>;
 

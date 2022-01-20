@@ -12,12 +12,12 @@ class UserService {
   ) {}
 
   async getAll(): Promise<User[]> {
-    const users = await this.userRepository.all();
+    const users = await this.userRepository.getAll();
     return users;
   }
 
   async findById(id: number): Promise<User> {
-    return this.userRepository.findOrFail(id);
+    return this.userRepository.findByIdOrFail(id);
   }
 
   async findByEmail(email: string): Promise<User> {
@@ -29,7 +29,7 @@ class UserService {
   }
 
   async delete(id: number): Promise<void> {
-    this.userRepository.delete(id);
+    await this.userRepository.delete(id);
   }
 }
 
