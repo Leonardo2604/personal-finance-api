@@ -22,7 +22,7 @@ class AuthService {
     private refreshTokenService: RefreshTokenService,
   ) {}
 
-  async authenticate(credentials: Credentials): Promise<Authorization> {
+  async authenticate(credentials: Credentials): Promise<User> {
     try {
       const user = await this.userService.findByEmail(credentials.email);
 
@@ -35,8 +35,7 @@ class AuthService {
         throw new UnauthorizedException('User or password incorrect.');
       }
 
-      const authorization = this.getAuthorizationFor(user);
-      return authorization;
+      return user;
     } catch (error) {
       if (error instanceof NotFoundException) {
         throw new UnauthorizedException('User or password incorrect.');
@@ -68,7 +67,7 @@ class AuthService {
     return this.userService.findById(userId);
   }
 
-  private async getAuthorizationFor(
+  async getAuthorizationFor(
     user: User,
     needRefreshToken = true,
   ): Promise<Authorization> {

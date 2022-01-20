@@ -10,6 +10,8 @@ import JsonwebtokenJwtService from '../services/implementations/jsonwebtokenJwtS
 import UuidUuidService from '../services/implementations/uuidUuidService';
 import JwtService from '../services/jwtService';
 import UuidService from '../services/uuidService';
+import UserRepository from '../../modules/auth/repositories/userRepository';
+import UserRepositoryTypeOrm from '../../modules/auth/repositories/typeorm/userRepositoryTypeOrm';
 
 class AppProvider {
   static register() {
@@ -26,6 +28,10 @@ class AppProvider {
     container.registerSingleton<UuidService>('UuidService', UuidUuidService);
 
     container.registerSingleton<UserService>('UserService', UserService);
+    container.registerSingleton<UserRepository>(
+      'UserRepository',
+      UserRepositoryTypeOrm,
+    );
     container.registerSingleton<AuthService>('AuthService', AuthService);
     container.registerSingleton<RefreshTokenService>(
       'RefreshTokenService',

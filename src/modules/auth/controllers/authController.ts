@@ -15,10 +15,13 @@ class AuthController {
 
   async authenticate(request: Request, response: Response): Promise<Response> {
     const { email, password } = request.body;
-    const authorization = await this.authService.authenticate({
+
+    const user = await this.authService.authenticate({
       email,
       password,
     });
+
+    const authorization = await this.authService.getAuthorizationFor(user);
 
     return response.json(authorization);
   }

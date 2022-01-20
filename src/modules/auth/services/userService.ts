@@ -1,55 +1,35 @@
-import { injectable } from 'tsyringe';
-import { getRepository, Repository } from 'typeorm';
+import { inject, injectable } from 'tsyringe';
 
 import User from '../../../database/entities/user';
-import NotFoundException from '../../../exceptions/notFoundException';
-import CreateUserData from '../interfaces/createUserData';
+import CreateUserDto from '../dtos/createUserDto';
+import UserRepository from '../repositories/userRepository';
 
 @injectable()
 class UserService {
-  private userRepository: Repository<User>;
-
-  constructor() {
-    this.userRepository = getRepository(User);
-  }
+  constructor(
+    @inject('UserRepository')
+    private userRepository: UserRepository,
+  ) {}
 
   async getAll(): Promise<User[]> {
-    const users = await this.userRepository.find();
+    const users = await this.userRepository.all();
     return users;
   }
 
   async findById(id: number): Promise<User> {
-    const user = await this.userRepository.findOne(id);
-
-    if (!user) {
-      throw new NotFoundException('User not found.');
-    }
-
-    return user;
+    return this.userRepository.findOrFail(id);
   }
 
   async findByEmail(email: string): Promise<User> {
-    const user = await this.userRepository.findOne({
-      where: { email },
-      relations: ['refreshToken'],
-    });
-
-    if (!user) {
-      throw new NotFoundException('User not found.');
-    }
-
-    return user;
+    return this.userRepository.findByEmailOrFail(email);
   }
 
-  async create(data: CreateUserData): Promise<User> {
-    const user = this.userRepository.create(data);
-    return this.userRepository.save(user);
+  async create(data: CreateUserDto): Promise<User> {
+    return this.userRepository.create(data);
   }
 
   async delete(id: number): Promise<void> {
-    await this.userRepository.softDelete({
-      id,
-    });
+    this.userRepository.delete(id);
   }
 }
 
