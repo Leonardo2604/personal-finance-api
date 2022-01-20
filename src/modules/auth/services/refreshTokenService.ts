@@ -1,14 +1,68 @@
+import { inject, injectable } from 'tsyringe';
+import { getRepository, Repository } from 'typeorm';
 import RefreshToken from '../../../database/entities/refreshToken';
 import User from '../../../database/entities/user';
+import NotFoundException from '../../../exceptions/notFoundException';
+import UuidService from '../../../shared/services/uuidService';
 
-interface RefreshTokenService {
-  createFor(user: User): Promise<RefreshToken>;
+@injectable()
+class RefreshTokenService {
+  private refreshTokenRepository: Repository<RefreshToken>;
 
-  findById(refreshTokenId: number): Promise<RefreshToken>;
+  constructor(
+    @inject('UuidService')
+    private uuidService: UuidService,
+  ) {
+    this.refreshTokenRepository = getRepository(RefreshToken);
+  }
 
-  findByToken(token: string): Promise<RefreshToken>;
+  async createFor(user: User): Promise<RefreshToken> {
+    let refreshToken = await this.refreshTokenRepository.findOne({
+      where: { user },
+    });
 
-  delete(refreshTokenId: number): Promise<void>;
+    const token = this.uuidService.createV4();
+
+    if (!refreshToken) {
+      refreshToken = this.refreshTokenRepository.create({
+        user,
+        token,
+      });
+    } else {
+      refreshToken.token = token;
+    }
+
+    return this.refreshTokenRepository.save(refreshToken);
+  }
+
+  async findById(refreshTokenId: number): Promise<RefreshToken> {
+    const refreshToken = await this.refreshTokenRepository.findOne(
+      refreshTokenId,
+    );
+
+    if (!refreshToken) {
+      throw new NotFoundException('Refresh token not found.');
+    }
+
+    return refreshToken;
+  }
+
+  async findByToken(token: string): Promise<RefreshToken> {
+    const refreshToken = await this.refreshTokenRepository.findOne({
+      where: { token },
+      relations: ['user'],
+    });
+
+    if (!refreshToken) {
+      throw new NotFoundException('Refresh token not found.');
+    }
+
+    return refreshToken;
+  }
+
+  async delete(refreshTokenId: number): Promise<void> {
+    await this.refreshTokenRepository.delete(refreshTokenId);
+  }
 }
 
 export default RefreshTokenService;
